@@ -16,7 +16,7 @@
   "signIn": "Sign in",
   "resetPassword": "Reset password",
   "newPassword": "New password",
-  "authHelp": "Use your Supabase account. Accounts are created by an administrator.",
+  "authHelp": "",
   "password": "Password",
   "sendReset": "Send reset link",
   "resetSent": "If this account exists, a password reset link has been sent.",
