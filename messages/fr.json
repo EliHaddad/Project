@@ -16,7 +16,7 @@
   "signIn": "Connexion",
   "resetPassword": "Mot de passe oublié",
   "newPassword": "Nouveau mot de passe",
-  "authHelp": "Utilise ton compte Supabase. Les comptes sont créés par un administrateur.",
+  "authHelp": "",
   "password": "Mot de passe",
   "sendReset": "Envoyer le lien",
   "resetSent": "Si ce compte existe, un lien de réinitialisation a été envoyé.",
