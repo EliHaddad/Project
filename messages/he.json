@@ -16,7 +16,7 @@
   "signIn": "כניסה",
   "resetPassword": "שכחתי סיסמה",
   "newPassword": "סיסמה חדשה",
-  "authHelp": "השתמשו בחשבון Supabase. מנהל המערכת יוצר את החשבונות.",
+  "authHelp": "",
   "password": "סיסמה",
   "sendReset": "שליחת קישור",
   "resetSent": "אם החשבון קיים, נשלח קישור לאיפוס הסיסמה.",
