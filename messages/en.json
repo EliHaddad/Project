@@ -216,5 +216,6 @@
   "receivedTo": "Received until",
   "dateOrder": "Date order",
   "newestFirst": "Newest first",
-  "oldestFirst": "Oldest first"
+  "oldestFirst": "Oldest first",
+  "importSwapped": "Ready · email and phone restored to their columns"
 }
