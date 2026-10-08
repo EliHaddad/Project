@@ -10,6 +10,7 @@ import ProjectGallery from './ProjectGallery';
 import ApartmentPlan from './ApartmentPlan';
 
 import PaymentTerms from './PaymentTerms';
+import Administration from './Administration';
 import type {User} from '@supabase/supabase-js';
 import {configured,supabase} from '@/lib/supabase';
 import {fetchAll,scoped} from '@/lib/data';
@@ -17,15 +18,18 @@ import {entities,fields,isEntity,label,localDate,table,payloadFrom,legacyMode,li
 
 export default function Workspace({path}:{path:string[]}) {
  const t=useTranslations();const locale=useLocale();const router=useRouter();
+ const [isAdmin,setIsAdmin]=useState(false);
  const [user,setUser]=useState<User|null>(null),[ready,setReady]=useState(false),[error,setError]=useState(''),[recovery,setRecovery]=useState(false);
- useEffect(()=>{if(!configured()){setReady(true);return;}const db=supabase();let live=true;db.auth.getUser().then(({data,error})=>{if(live){setUser(data.user);setReady(true);if(error && !error.message.includes('Auth session missing'))setError(t('authError'));}});const {data}=db.auth.onAuthStateChange((event,session)=>{setUser(session?.user??null);setReady(true);if(event==='PASSWORD_RECOVERY')setRecovery(true);});return()=>{live=false;data.subscription.unsubscribe();};},[t]);
+ useEffect(()=>{setIsAdmin(false);if(!user)return;let live=true;supabase().from('crm_members').select('role,active').eq('id',user.id).single().then(({data})=>{if(live)setIsAdmin(data?.role==='admin'&&data?.active===true);});return()=>{live=false;};},[user?.id]);
+ useEffect(()=>{if(!configured()){setReady(true);return;}const db=supabase();if(window.location.hash.includes('type=invite'))setRecovery(true);let live=true;db.auth.getUser().then(({data,error})=>{if(live){setUser(data.user);setReady(true);if(error && !error.message.includes('Auth session missing'))setError(t('authError'));}});const {data}=db.auth.onAuthStateChange((event,session)=>{setUser(session?.user??null);setReady(true);if(event==='PASSWORD_RECOVERY')setRecovery(true);});return()=>{live=false;data.subscription.unsubscribe();};},[t]);
  if(!configured())return <section className="panel"><h1>{t('setup')}</h1><p>{t('setupHelp')}</p></section>;
  if(!ready)return <p role="status">{t('loading')}</p>;
  if(!user || recovery)return <Auth recovery={recovery} onRecovered={()=>{setRecovery(false);router.replace(`/${locale}`);}}/>;
+ const adminPage=path.length===1&&path[0]==='administration';
  const paymentPage=path.length===1&&path[0]==='payment-terms';
  const entity=path[0] && isEntity(path[0])?path[0]:null;
- if(path.length>3 || (path.length && !entity && !paymentPage) || (path.length===3 && path[2]!=='edit'))return <section className="panel"><h1>{t('notFound')}</h1><Link href={`/${locale}`}>{t('dashboard')}</Link></section>;
- return <><div className="profile-strip"><span className="profile-identity"><span className="profile-avatar" aria-hidden="true">{user.email?.charAt(0).toUpperCase()}</span>{user.email}</span><button onClick={async()=>{const {error}=await supabase().auth.signOut();if(error)setError(t('authError'));}}><Icon name="logout"/>{t('signOut')}</button></div>{error && <p role="alert" className="error">{error}</p>}{paymentPage?<PaymentTerms userId={user.id}/>:entity?<Records key={path.join('/')} entity={entity} id={path[1]} edit={path[2]==='edit'} user={user}/>:<Dashboard user={user}/>}</>;
+ if(path.length>3 || (path.length && !entity && !paymentPage && !adminPage) || (path.length===3 && path[2]!=='edit'))return <section className="panel"><h1>{t('notFound')}</h1><Link href={`/${locale}`}>{t('dashboard')}</Link></section>;
+ return <><div className="profile-strip"><span className="profile-identity"><span className="profile-avatar" aria-hidden="true">{user.email?.charAt(0).toUpperCase()}</span>{user.email}</span>{isAdmin&&<Link className="button" href={`/${locale}/administration`}>{t('administration')}</Link>}<button onClick={async()=>{setIsAdmin(false);const {error}=await supabase().auth.signOut();if(error)setError(t('authError'));}}><Icon name="logout"/>{t('signOut')}</button></div>{error && <p role="alert" className="error">{error}</p>}{adminPage?(isAdmin?<Administration userId={user.id}/>:<section className="panel"><h1>{t('adminOnly')}</h1></section>):paymentPage?<PaymentTerms userId={user.id}/>:entity?<Records key={path.join('/')} entity={entity} id={path[1]} edit={path[2]==='edit'} user={user}/>:<Dashboard user={user}/>}</>;
 }
 
 function Auth({recovery,onRecovered}:{recovery:boolean;onRecovered:()=>void}) {
