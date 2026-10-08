@@ -9,7 +9,7 @@ insert into public.profiles(id,full_name,role) values
 insert into public.crm_members(id,email,full_name,role) values
  ('b31ec819-4634-4c5c-8319-712c3c8dba01','crm-test-a@example.invalid','Test A','employee'),
  ('b31ec819-4634-4c5c-8319-712c3c8dba02','crm-test-b@example.invalid','Test B','employee');
-insert into public.prospects(id,first_name,last_name,assigned_to) values
+insert into public.prospects(id,first_name,last_name,assigned_to) overriding system value values
  (-910001,'CRM Test','A','b31ec819-4634-4c5c-8319-712c3c8dba01'),
  (-910002,'CRM Test','B','b31ec819-4634-4c5c-8319-712c3c8dba02');
 set local role authenticated;
@@ -48,3 +48,4 @@ do $$ begin if exists(select 1 from public.prospects) or exists(select 1 from pu
 reset role;
 rollback;
 select 'Team access tests passed; all fixtures rolled back' as result;
+
