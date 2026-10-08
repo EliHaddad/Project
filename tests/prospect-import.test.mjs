@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {parseLeads,receptionDate,splitDelimited,phoneKey} from '../src/lib/prospect-import.ts';
+test('French dates use explicit year and reject invalid calendar dates',()=>{assert.equal(receptionDate('1 sept.',2026,''),'2026-09-01');assert.equal(receptionDate('31 fevr.',2026,''),'');assert.equal(receptionDate('',2026,'2026-10-08'),'2026-10-08');});
+test('sample unnamed date header, Hebrew commercial and exact objective survive',()=>{const rows=parseLeads([['','heure','Nom','email','telephone','pays','objectif_de_cet_achat_?',"délai_d'achat_",'משווק מטפל'],['2 sept.','18:57','Nathan melki','N@example.com','p:+33659319175','fr','résidence_principale','dès_que_possible','Chmouel']],2026,'');assert.equal(rows[0].received_on,'2026-09-02');assert.equal(rows[0].phone,'+33659319175');assert.equal(rows[0].commercial,'Chmouel');assert.equal(rows[0].objective,'résidence_principale');assert.equal(rows[0].issue,'');});
+test('duplicates compare email case and phone punctuation, including within file',()=>{const rows=parseLeads([['Nom','email','telephone','date'],['A','A@x.fr','','2026-09-01'],['B','a@x.fr','','2026-09-02'],['C','','+33 6 12','2026-09-03']],2026,'',[{phone:'0033612'}]);assert.deepEqual(rows.map(r=>r.duplicate),[false,true,true]);assert.equal(phoneKey('p:+33 6 12'),'33612');});
+test('CSV quoted multiline cells and trailing empty columns retained',()=>{assert.deepEqual(splitDelimited('Nom;notes;\r\n"A";"line1\nline2";',';'),[['Nom','notes',''],['A','line1\nline2','']]);});
+
+test('unambiguous swapped email and phone columns are repaired and flagged',()=>{const rows=parseLeads([['Nom','email','telephone'],['Test','p:+33 6 12345678','test@example.com']],2026,'2026-09-01');assert.equal(rows[0].email,'test@example.com');assert.equal(rows[0].phone,'+33 6 12345678');assert.equal(rows[0].swapped,true);assert.equal(rows[0].issue,'');});
+
+test('phone in email column with empty phone becomes a phone-only lead',()=>{const rows=parseLeads([['Nom','email','telephone'],['Test','06 12 34 56 78','']],2026,'2026-09-01');assert.equal(rows[0].email,'');assert.equal(rows[0].phone,'06 12 34 56 78');assert.equal(rows[0].swapped,true);assert.equal(rows[0].issue,'');});
