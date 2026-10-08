@@ -1,4 +1,4 @@
-export type ImportLead={line:number;name:string;email:string;phone:string;country:string;received_on:string;received_time:string;objective:string;deadline:string;commercial:string;issue:string;duplicate:boolean};
+export type ImportLead={line:number;name:string;email:string;phone:string;country:string;received_on:string;received_time:string;objective:string;deadline:string;commercial:string;issue:string;duplicate:boolean;swapped:boolean};
 export function phoneKey(value:string){return value.replace(/^p:/i,'').replace(/[^\d]/g,'').replace(/^00/,'');}
 export function splitDelimited(text:string,delimiter:string){
  const rows:string[][]=[];let row:string[]=[],cell='',quoted=false;
@@ -21,10 +21,10 @@ export function parseLeads(matrix:string[][],year:number,fallback:string,existin
  if(keys.date<0&&header[0]==='')keys.date=0;
  const emails=new Set(existing.map(p=>String(p.email??'').trim().toLowerCase()).filter(Boolean)),phones=new Set(existing.map(p=>phoneKey(String(p.phone??''))).filter(Boolean));
  return matrix.slice(first+1).flatMap((r,i)=>{
-  if(!r.some(s=>s.trim()))return [];const get=(n:number)=>n<0?'':String(r[n]??'').trim();const email=get(keys.email),phone=get(keys.phone).replace(/^p:/i,'').trim(),received_on=receptionDate(get(keys.date),year,fallback),received_time=get(keys.time);
+  if(!r.some(s=>s.trim()))return [];const get=(n:number)=>n<0?'':String(r[n]??'').trim();let email=get(keys.email),rawPhone=get(keys.phone);const swapped=/^(?:p:\s*)?\+?[\d\s().-]{5,}$/i.test(email)&&(!rawPhone||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawPhone));if(swapped)[email,rawPhone]=[rawPhone,email];const phone=rawPhone.replace(/^p:/i,'').trim(),received_on=receptionDate(get(keys.date),year,fallback),received_time=get(keys.time);
   const duplicate=!!((email&&emails.has(email.toLowerCase()))||(phoneKey(phone)&&phones.has(phoneKey(phone))));
   let issue=!get(name)?'name':!received_on?'date':received_time&&!/^([01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(received_time)?'time':email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)?'email':'';
   if(!issue){if(email)emails.add(email.toLowerCase());if(phoneKey(phone))phones.add(phoneKey(phone));}
-  return [{line:first+i+2,name:get(name),email,phone,country:get(keys.country),received_on,received_time,objective:get(keys.objective),deadline:get(keys.deadline),commercial:get(keys.commercial),issue,duplicate}];
+  return [{line:first+i+2,name:get(name),email,phone,country:get(keys.country),received_on,received_time,objective:get(keys.objective),deadline:get(keys.deadline),commercial:get(keys.commercial),issue,duplicate,swapped}];
  });
 }
