@@ -240,5 +240,12 @@
   "chatWrite": "Your message",
   "chatSend": "Send",
   "sending": "Sending…",
-  "chatIntro": "Talk to your colleagues or the whole team."
+  "chatIntro": "Talk to your colleagues or the whole team.",
+  "filters": "Filters",
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "allValues": "All values",
+  "yes": "Yes",
+  "no": "No",
+  "resetFilters": "Reset filters"
 }

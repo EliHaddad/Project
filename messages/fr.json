@@ -240,5 +240,12 @@
   "chatWrite": "Ton message",
   "chatSend": "Envoyer",
   "sending": "Envoi…",
-  "chatIntro": "Échange avec tes collègues ou avec toute l’équipe."
+  "chatIntro": "Échange avec tes collègues ou avec toute l’équipe.",
+  "filters": "Filtres",
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "allValues": "Toutes les valeurs",
+  "yes": "Oui",
+  "no": "Non",
+  "resetFilters": "Réinitialiser les filtres"
 }
