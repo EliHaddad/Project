@@ -247,5 +247,6 @@
   "allValues": "כל הערכים",
   "yes": "כן",
   "no": "לא",
-  "resetFilters": "איפוס מסננים"
+  "resetFilters": "איפוס מסננים",
+  "chooseApartmentFilters": "בחרו קריטריונים ואז לחצו על חיפוש להצגת הדירות."
 }

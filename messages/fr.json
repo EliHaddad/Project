@@ -247,5 +247,6 @@
   "allValues": "Toutes les valeurs",
   "yes": "Oui",
   "no": "Non",
-  "resetFilters": "Réinitialiser les filtres"
+  "resetFilters": "Réinitialiser les filtres",
+  "chooseApartmentFilters": "Choisis tes critères, puis clique sur Rechercher pour afficher les appartements."
 }
