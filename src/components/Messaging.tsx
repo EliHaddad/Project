@@ -5,14 +5,24 @@ import Link from 'next/link';
 import {useLocale,useTranslations} from 'next-intl';
 import {supabase} from '@/lib/supabase';
 import Icon from './Icon';
+import {scoped} from '@/lib/data';
+import {legacyMode} from '@/lib/model';
 type Contact={id:string;full_name:string};
 type Thread={id:string;kind:'team'|'direct';peer_id:string|null;peer_name:string|null;last_body:string|null;last_at:string|null;unread:number};
 type Message={id:string;sender_id:string;body:string;created_at:string};
 const changed=()=>window.dispatchEvent(new Event('crm-chat-read'));
 export function MessageLink({userId}:{userId:string}){
  const t=useTranslations(),locale=useLocale();const [unread,setUnread]=useState(0);
- useEffect(()=>{let alive=true;let pending=false;async function refresh(){if(document.hidden||pending)return;pending=true;try{const r=await supabase().rpc('crm_chat_inbox');if(alive&&!r.error)setUnread((r.data as Thread[]??[]).reduce((n,c)=>n+Number(c.unread),0));}finally{pending=false;}}refresh();const timer=setInterval(refresh,20000);window.addEventListener('crm-chat-read',refresh);document.addEventListener('visibilitychange',refresh);return()=>{alive=false;clearInterval(timer);window.removeEventListener('crm-chat-read',refresh);document.removeEventListener('visibilitychange',refresh);};},[userId]);
- return <Link className="button chat-shortcut" href={`/${locale}/messaging`}><Icon name="chat"/>{t('messaging')}{unread>0&&<span className="chat-unread" aria-label={t('chatUnread',{count:unread})}>{unread>99?'99+':unread}</span>}</Link>;
+ useEffect(()=>{let alive=true;let pending=false;async function refresh(){if(document.hidden||pending)return;pending=true;try{const r=await supabase().rpc('crm_chat_inbox');if(alive&&!r.error){const count=(r.data as Thread[]??[]).reduce((n,c)=>n+Number(c.unread),0);setUnread(count);window.dispatchEvent(new CustomEvent('crm-chat-count',{detail:count}));}}finally{pending=false;}}refresh();const timer=setInterval(refresh,5000);window.addEventListener('crm-chat-read',refresh);document.addEventListener('visibilitychange',refresh);return()=>{alive=false;window.dispatchEvent(new CustomEvent('crm-chat-count',{detail:0}));clearInterval(timer);window.removeEventListener('crm-chat-read',refresh);document.removeEventListener('visibilitychange',refresh);};},[userId]);
+ return <Link className="button chat-shortcut" href={`/${locale}/messaging`}><Icon name="chat"/>{t('messaging')}{unread>0&&<span role="status" className="chat-unread" aria-label={t('chatUnread',{count:unread})}>{unread>99?'99+':unread}</span>}</Link>;
+}
+export function WorkNotifications({userId}:{userId:string}){
+ useEffect(()=>{let alive=true,pending=false;async function refresh(){if(document.hidden||pending)return;pending=true;try{const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const appointments=scoped('appointments',userId,'id',{count:'exact',head:true});
+ const tasks=scoped('tasks',userId,'id',{count:'exact',head:true});
+ const results=await Promise.all([legacyMode?appointments.eq('appointment_date',today).or('status.is.null,status.not.in.(cancelled,completed,canceled,Annulé,Terminé)'):appointments.gte('starts_at',today+'T00:00:00+03:00').lt('starts_at',today+'T23:59:59+03:00').or('status.is.null,status.not.in.(cancelled,completed)'),legacyMode?tasks.eq('completed',false).lte('due_date',today):tasks.lte('due_at',new Date().toISOString()).or('status.is.null,status.not.in.(completed,done,cancelled)')]);
+ if(alive)results.forEach((r,i)=>{if(!r.error)window.dispatchEvent(new CustomEvent('crm-work-count',{detail:{entity:i===0?'appointments':'tasks',count:r.count??0}}));});
+ }finally{pending=false;}}void refresh();const timer=setInterval(refresh,15000);document.addEventListener('visibilitychange',refresh);window.addEventListener('focus',refresh);return()=>{alive=false;clearInterval(timer);document.removeEventListener('visibilitychange',refresh);window.removeEventListener('focus',refresh);['appointments','tasks'].forEach(entity=>window.dispatchEvent(new CustomEvent('crm-work-count',{detail:{entity,count:0}})));};},[userId]);return null;
 }
 export default function Messaging({userId}:{userId:string}){
  const t=useTranslations(),locale=useLocale();const [contacts,setContacts]=useState<Contact[]>([]),[threads,setThreads]=useState<Thread[]>([]),[selected,setSelected]=useState(''),[messages,setMessages]=useState<Message[]>([]),[draft,setDraft]=useState(''),[peer,setPeer]=useState(''),[loading,setLoading]=useState(true),[sending,setSending]=useState(false),[opening,setOpening]=useState(false),[error,setError]=useState(''),[setup,setSetup]=useState(false),[limit,setLimit]=useState(100),[search,setSearch]=useState('');const scroll=useRef<HTMLDivElement>(null),request=useRef(0),nearBottom=useRef(true);

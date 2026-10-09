@@ -11,7 +11,7 @@ import ApartmentPlan from './ApartmentPlan';
 
 import PaymentTerms from './PaymentTerms';
 import Administration from './Administration';
-import Messaging,{MessageLink} from './Messaging';
+import Messaging,{MessageLink,WorkNotifications} from './Messaging';
 import type {User} from '@supabase/supabase-js';
 import {configured,supabase} from '@/lib/supabase';
 import {fetchAll,scoped} from '@/lib/data';
@@ -31,7 +31,7 @@ export default function Workspace({path}:{path:string[]}) {
  const paymentPage=path.length===1&&path[0]==='payment-terms';
  const entity=path[0] && isEntity(path[0])?path[0]:null;
  if(path.length>3 || (path.length && !entity && !paymentPage && !adminPage && !messagingPage) || (path.length===3 && path[2]!=='edit'))return <section className="panel"><h1>{t('notFound')}</h1><Link href={`/${locale}`}>{t('dashboard')}</Link></section>;
- return <><div className="profile-strip"><span className="profile-identity"><span className="profile-avatar" aria-hidden="true">{user.email?.charAt(0).toUpperCase()}</span>{user.email}</span><MessageLink key={user.id} userId={user.id}/>{isAdmin&&<Link className="button" href={`/${locale}/administration`}>{t('administration')}</Link>}<button onClick={async()=>{setIsAdmin(false);const {error}=await supabase().auth.signOut();if(error)setError(t('authError'));}}><Icon name="logout"/>{t('signOut')}</button></div>{error && <p role="alert" className="error">{error}</p>}{messagingPage?<Messaging key={user.id} userId={user.id}/>:adminPage?(isAdmin?<Administration userId={user.id}/>:<section className="panel"><h1>{t('adminOnly')}</h1></section>):paymentPage?<PaymentTerms userId={user.id}/>:entity?<Records key={path.join('/')} entity={entity} id={path[1]} edit={path[2]==='edit'} user={user}/>:<Dashboard user={user}/>}</>;
+ return <><WorkNotifications key={user.id} userId={user.id}/><div className="profile-strip"><span className="profile-identity"><span className="profile-avatar" aria-hidden="true">{user.email?.charAt(0).toUpperCase()}</span>{user.email}</span><MessageLink key={user.id} userId={user.id}/>{isAdmin&&<Link className="button" href={`/${locale}/administration`}>{t('administration')}</Link>}<button onClick={async()=>{setIsAdmin(false);const {error}=await supabase().auth.signOut();if(error)setError(t('authError'));}}><Icon name="logout"/>{t('signOut')}</button></div>{error && <p role="alert" className="error">{error}</p>}{messagingPage?<Messaging key={user.id} userId={user.id}/>:adminPage?(isAdmin?<Administration userId={user.id}/>:<section className="panel"><h1>{t('adminOnly')}</h1></section>):paymentPage?<PaymentTerms userId={user.id}/>:entity?<Records key={path.join('/')} entity={entity} id={path[1]} edit={path[2]==='edit'} user={user}/>:<Dashboard user={user}/>}</>;
 }
 
 function Auth({recovery,onRecovered}:{recovery:boolean;onRecovered:()=>void}) {
