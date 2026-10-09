@@ -248,5 +248,15 @@
   "yes": "Yes",
   "no": "No",
   "resetFilters": "Reset filters",
-  "chooseApartmentFilters": "Choose your criteria, then click Search to display apartments."
+  "chooseApartmentFilters": "Choose your criteria, then click Search to display apartments.",
+  "aiAssistant": "AI assistant",
+  "aiIntro": "Ask about records available to your account. The assistant reads the CRM without changing data.",
+  "aiQuestion": "Your question",
+  "aiExample": "Which apartments are available in Ashdod?",
+  "aiConsent": "I agree to send my questions and queried records to OpenAI to generate answers.",
+  "aiNew": "New conversation",
+  "aiSetup": "The assistant is ready, but an administrator must configure the OpenAI key.",
+  "aiError": "Unable to answer right now. Try again.",
+  "aiLimit": "The AI service limit has been reached. Try later.",
+  "close": "Close"
 }
