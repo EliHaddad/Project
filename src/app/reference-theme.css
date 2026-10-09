@@ -32,3 +32,5 @@ input[type="checkbox"]:focus-visible{outline:3px solid #e88c29;outline-offset:3p
 
 
 .topbar-tools,.topbar-account{display:flex;align-items:center;gap:14px;min-width:0}.topbar-account:empty{display:none}.topbar-account .profile-identity{font-size:12px;gap:10px}.topbar-account button{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;background:#fff;color:#566a75;border:1px solid #dce3e6;box-shadow:none;padding:8px 12px}.topbar-account .profile-avatar{width:32px;height:32px}.topbar-tools{margin-inline-start:auto}@media(max-width:900px){.topbar{flex-wrap:wrap;gap:12px}.topbar-tools{flex-wrap:wrap;justify-content:flex-end}.topbar-account{flex-wrap:wrap;justify-content:flex-end}.topbar-account .profile-identity{overflow-wrap:anywhere}}
+
+.assistant-launcher{background:#16834a!important;border-color:#16834a!important;color:#fff!important}.assistant-launcher:hover{background:#116738!important;border-color:#116738!important}.assistant-launcher:focus-visible{outline:3px solid #86efac;outline-offset:3px}
