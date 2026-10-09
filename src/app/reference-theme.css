@@ -20,3 +20,9 @@ body,.main{background:#f7f8fa;color:#203034}body:before{display:none}.sidebar{in
 .apartment-plan .gallery-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}.apartment-plan>a{display:block;background:#fff;border:1px solid #e1e6e8;border-radius:8px;overflow:hidden}.apartment-plan img{display:block;width:100%;max-height:800px;object-fit:contain;height:auto;margin:auto}
 
 .plan-actions{display:flex;flex-wrap:wrap;gap:8px}.plan-actions .share-whatsapp{background:#23865b;border-color:#23865b}.plan-actions .share-whatsapp:hover{background:#196e49}.plan-actions .share-email{background:#edf1f3;color:#34474c;border-color:#dce4e8}.plan-actions .share-email:hover{background:#dfe7eb}.plan-share-help{font-size:13px;margin-bottom:16px}
+
+/* White checkboxes on every CRM list and form. */
+input[type="checkbox"]{appearance:none!important;-webkit-appearance:none!important;color-scheme:light;background:#fff!important;border:1px solid #aeb9be!important;border-radius:4px!important;width:20px!important;height:20px!important;padding:0!important;display:inline-block;vertical-align:middle;cursor:pointer;flex-shrink:0}
+input[type="checkbox"]:checked{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m4 10 4 4 8-8' fill='none' stroke='%23213136' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px 18px no-repeat!important}
+input[type="checkbox"]:indeterminate{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10h10' stroke='%23213136' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center/18px 18px no-repeat!important}
+input[type="checkbox"]:focus-visible{outline:3px solid #e88c29;outline-offset:3px}input[type="checkbox"]:disabled{cursor:not-allowed;opacity:.65}
