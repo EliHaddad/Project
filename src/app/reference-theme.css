@@ -36,3 +36,6 @@ input[type="checkbox"]:focus-visible{outline:3px solid #e88c29;outline-offset:3p
 .assistant-launcher{background:#16834a!important;border-color:#16834a!important;color:#fff!important}.assistant-launcher:hover{background:#116738!important;border-color:#116738!important}.assistant-launcher:focus-visible{outline:3px solid #86efac;outline-offset:3px}
 
 .section-prospects .table-toolbar{align-items:flex-end}.section-prospects .table-toolbar label{margin:0}.section-prospects .table-toolbar input{height:54px;box-sizing:border-box}.section-prospects .table-toolbar .search-decoration{top:auto;bottom:19px}.section-prospects .table-toolbar .results-count{margin-block:0 8px}.section-prospects .table-toolbar>.danger{margin-bottom:8px}
+
+/* Framed main section titles across all languages. */
+.content-area h1{display:inline-block;border:1px solid #f1c48e;border-inline-start:4px solid #e89b4b;border-radius:10px;background:#fff7ed;padding:10px 18px;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}.page-heading .eyebrow{margin-bottom:10px}
