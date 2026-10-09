@@ -26,3 +26,7 @@ input[type="checkbox"]{appearance:none!important;-webkit-appearance:none!importa
 input[type="checkbox"]:checked{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m4 10 4 4 8-8' fill='none' stroke='%23213136' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px 18px no-repeat!important}
 input[type="checkbox"]:indeterminate{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10h10' stroke='%23213136' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center/18px 18px no-repeat!important}
 input[type="checkbox"]:focus-visible{outline:3px solid #e88c29;outline-offset:3px}input[type="checkbox"]:disabled{cursor:not-allowed;opacity:.65}
+
+/* Light orange section titles. */
+.content-area h1{color:#e89b4b!important}
+
