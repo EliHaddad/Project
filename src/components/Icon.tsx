@@ -1,5 +1,6 @@
-type IconName='dashboard'|'prospects'|'projects'|'apartments'|'appointments'|'activities'|'tasks'|'arrow'|'search'|'logout'|'payments';
+type IconName='dashboard'|'prospects'|'projects'|'apartments'|'appointments'|'activities'|'tasks'|'arrow'|'search'|'logout'|'payments'|'chat';
 const paths:Record<IconName,string>={
+ chat:'M21 11a8 8 0 0 1-8 8H7l-5 3 2-6a8 8 0 0 1-1-5 8 8 0 0 1 18 0 M7 11h10 M7 7h7',
  payments:'M3 5h18v14H3z M3 10h18 M7 15h3',
  dashboard:'M3 3h7v7H3z M14 3h7v4h-7z M14 11h7v10h-7z M3 14h7v7H3z',
  prospects:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
