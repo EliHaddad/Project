@@ -1,5 +1,6 @@
 import {createClient} from '@supabase/supabase-js';
 import {NextRequest,NextResponse} from 'next/server';
+import {boundedJson,hasRequiredMfa} from '@/lib/request-security';
 export const dynamic='force-dynamic';
 export async function POST(request:NextRequest){
  const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,secret=process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -9,13 +10,17 @@ export async function POST(request:NextRequest){
  const caller=createClient(url,key,{global:{headers:{Authorization:`Bearer ${token}`}},auth:{persistSession:false,autoRefreshToken:false}});
  const {data:auth,error:authError}=await caller.auth.getUser(token);
  if(authError||!auth.user)return NextResponse.json({error:'unauthorized'},{status:401});
+ if(!hasRequiredMfa(auth.user,token))return NextResponse.json({error:'forbidden'},{status:403});
  const {data:member,error}=await caller.from('crm_members').select('role,active').eq('id',auth.user.id).single();
  if(error||member?.role!=='admin'||!member.active)return NextResponse.json({error:'forbidden'},{status:403});
- let body;try{body=await request.json();}catch{return NextResponse.json({error:'invalid'},{status:400});}
+ let body;try{body=await boundedJson(request,4096);}catch{return NextResponse.json({error:'invalid'},{status:400});}
  const email=typeof body.email==='string'?body.email.trim().toLowerCase():'';
  const name=typeof body.name==='string'?body.name.trim():'';
  if(!name||name.length>100||email.length>254||!/^\S+@\S+\.\S+$/.test(email))return NextResponse.json({error:'invalid'},{status:400});
  if(!secret)return NextResponse.json({error:'adminConfiguration'},{status:503});
+ const quota=await caller.rpc('crm_take_api_quota',{action_name:'invite'});
+ if(quota.error)return NextResponse.json({error:'failed'},{status:503});
+ if(quota.data!==true)return NextResponse.json({error:'failed'},{status:429,headers:{'Retry-After':'60'}});
  const service=createClient(url,secret,{auth:{persistSession:false,autoRefreshToken:false}});
  const {data:existing,error:lookupError}=await service.from('crm_members').select('id').eq('email',email).limit(1);
  if(lookupError)return NextResponse.json({error:'failed'},{status:500});
