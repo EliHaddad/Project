@@ -1,5 +1,6 @@
 import {createClient} from '@supabase/supabase-js';
 import {NextRequest,NextResponse} from 'next/server';
+import {boundedJson,hasRequiredMfa} from '@/lib/request-security';
 import {entities,fields,table,legacyMode,type Entity} from '@/lib/model';
 export const dynamic='force-dynamic';
 export const maxDuration=60;
@@ -9,12 +10,16 @@ export async function POST(request:NextRequest){
  if(!url||!key||!token)return NextResponse.json({error:'unauthorized'},{status:401});
  const db=createClient(url,key,{global:{headers:{Authorization:'Bearer '+token}},auth:{persistSession:false,autoRefreshToken:false}});
  const auth=await db.auth.getUser(token);if(auth.error||!auth.data.user)return NextResponse.json({error:'unauthorized'},{status:401});
+ if(!hasRequiredMfa(auth.data.user,token))return NextResponse.json({error:'forbidden'},{status:403});
  const member=await db.from('crm_members').select('active').eq('id',auth.data.user.id).single();if(!member.data?.active)return NextResponse.json({error:'forbidden'},{status:403});
  if(!process.env.OPENAI_API_KEY)return NextResponse.json({error:'aiSetup'},{status:503});
- let body;try{body=await request.json();}catch{return NextResponse.json({error:'aiError'},{status:400});}
+ let body;try{body=await boundedJson(request);}catch{return NextResponse.json({error:'aiError'},{status:400});}
  if(body.consent!==true)return NextResponse.json({error:'aiConsent'},{status:400});
  if(!Array.isArray(body.messages)||!body.messages.length||body.messages.length>12||body.messages.some((m:unknown)=>!m||typeof m!=='object'||!('role' in m)||!('content' in m)||!['user','assistant'].includes(String(m.role))||typeof m.content!=='string'||m.content.length>3000))return NextResponse.json({error:'aiError'},{status:400});
  const locale=['fr','he','en'].includes(body.locale)?body.locale:'fr';
+ const quota=await db.rpc('crm_take_api_quota',{action_name:'assistant'});
+ if(quota.error)return NextResponse.json({error:'aiError'},{status:503});
+ if(quota.data!==true)return NextResponse.json({error:'aiLimit'},{status:429,headers:{'Retry-After':'60'}});
  const schema=Object.fromEntries(entities.map(e=>[e,fields[e].map(f=>f.key)]));
  const input:unknown[]=[...body.messages];
  const tools=[{type:'function',name:'search_crm',description:'Read authorized CRM records or count matches. Use the exact database field names and canonical statuses. Returned rows are capped at 20; total is exact.',strict:true,parameters:{type:'object',properties:{entity:{type:'string',enum:entities},filters:{type:'array',items:{type:'object',properties:{field:{type:'string'},operator:{type:'string',enum:['eq','gte','lte','ilike']},value:{type:'string'}},required:['field','operator','value'],additionalProperties:false}}},required:['entity','filters'],additionalProperties:false}}];
