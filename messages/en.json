@@ -258,5 +258,15 @@
   "aiSetup": "The assistant is ready, but an administrator must configure the OpenAI key.",
   "aiError": "Unable to answer right now. Try again.",
   "aiLimit": "The AI service limit has been reached. Try later.",
-  "close": "Close"
+  "close": "Close",
+  "accountSecurity": "Account security",
+  "securityHelp": "Protect your account with a temporary code from an app such as Google Authenticator or Microsoft Authenticator.",
+  "securityEnabled": "Two-factor authentication is enabled.",
+  "securityActivate": "Enable two-factor authentication",
+  "securityScan": "Scan this QR code in your Authenticator app, then enter its six-digit code.",
+  "securityChallenge": "Enter your Authenticator code to access the CRM.",
+  "securityCode": "Six-digit code",
+  "securityVerify": "Verify code",
+  "securityError": "Verification failed. Try again with a new code.",
+  "securityRetry": "Try again"
 }
