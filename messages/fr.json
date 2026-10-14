@@ -268,5 +268,8 @@
   "securityCode": "Code à six chiffres",
   "securityVerify": "Vérifier le code",
   "securityError": "Vérification impossible. Réessaie avec un nouveau code.",
-  "securityRetry": "Réessayer"
+  "securityRetry": "Réessayer",
+  "sortReception": "Trier par date de réception",
+  "newestFirst": "Plus récents en premier",
+  "oldestFirst": "Plus anciens en premier"
 }

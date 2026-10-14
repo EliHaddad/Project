@@ -268,5 +268,8 @@
   "securityCode": "Six-digit code",
   "securityVerify": "Verify code",
   "securityError": "Verification failed. Try again with a new code.",
-  "securityRetry": "Try again"
+  "securityRetry": "Try again",
+  "sortReception": "Sort by reception date",
+  "newestFirst": "Newest first",
+  "oldestFirst": "Oldest first"
 }

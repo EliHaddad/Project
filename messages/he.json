@@ -268,5 +268,8 @@
   "securityCode": "קוד בן שש ספרות",
   "securityVerify": "אימות הקוד",
   "securityError": "האימות נכשל. נסו שוב עם קוד חדש.",
-  "securityRetry": "נסו שוב"
+  "securityRetry": "נסו שוב",
+  "sortReception": "מיון לפי תאריך קבלה",
+  "newestFirst": "החדשים ביותר תחילה",
+  "oldestFirst": "הישנים ביותר תחילה"
 }
