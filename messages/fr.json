@@ -301,5 +301,7 @@
   "dossierYes": "Oui",
   "dossierNo": "Non",
   "dossierPdfReview": "Extraction sur {tablePages} pages sur {pages}. Vérifie chaque ligne avec le PDF : une mise en page différente peut laisser des logements ou des valeurs non reconnus. Prix attendus en ₪ et surfaces en m². Aucun ajout avant confirmation.",
-  "dossierPdfError": "Extraction impossible ou valeurs à corriger. Utilise un PDF texte avec un tableau et des colonnes Numéro/Référence, Pièces, Surface et Prix, ou le modèle CSV. Les plans dessinés et scans sans texte ne sont pas convertis. Maximum : 5 Mo et 50 pages."
+  "dossierPdfError": "Extraction impossible ou valeurs à corriger. Utilise un PDF texte avec un tableau et des colonnes Numéro/Référence, Pièces, Surface et Prix, ou le modèle CSV. Les plans dessinés et scans sans texte ne sont pas convertis. Maximum : 5 Mo et 50 pages.",
+  "dossierFileSaved": "Fichier enregistré dans le dossier choisi.",
+  "dossierDownloadStarted": "Téléchargement transmis au navigateur. Consulte ses téléchargements (Ctrl+J) pour ouvrir le fichier ou afficher son dossier. L’emplacement dépend des réglages du navigateur."
 }

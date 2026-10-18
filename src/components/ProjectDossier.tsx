@@ -2,6 +2,7 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {useTranslations} from 'next-intl';
 import {supabase} from '@/lib/supabase';
+import {saveFile} from '@/lib/save-file';
 import {fetchAll} from '@/lib/data';
 import {creationPayload,legacyMode,table} from '@/lib/model';
 import {apartmentRows,validateApartments,hasApartmentConflict,validProjectFile,type ApartmentDraft} from '@/lib/apartment-import';
@@ -38,11 +39,11 @@ export default function ProjectDossier({projectId,userId,canManage,onImported}:{
   finally{try{setDocuments(await loadDocuments());}catch{setError(previous=>previous||t('dossierLoadError'));}lock.current=false;setBusy(false);}
  }
  async function download(document:DocumentRow){
-  if(lock.current)return;lock.current=true;setBusy(true);setError('');
+  if(lock.current)return;lock.current=true;setBusy(true);setError('');setMessage('');
   try{
    if(!document.file_url.startsWith(`projects/${projectId}/`)||document.file_url.includes('..'))throw Error('path');
-   const {data,error}=await supabase().storage.from('documents').download(document.file_url);if(error)throw error;
-   const url=URL.createObjectURL(data);const a=window.document.createElement('a');a.href=url;a.download=document.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);
+   const outcome=await saveFile(async()=>{const {data,error}=await supabase().storage.from('documents').download(document.file_url);if(error)throw error;return data;},document.name);
+   if(outcome!=='cancelled')setMessage(t(outcome==='saved'?'dossierFileSaved':'dossierDownloadStarted'));
   }catch{setError(t('dossierDownloadError'));}finally{lock.current=false;setBusy(false);}
  }
  async function readApartments(file:File|undefined){

@@ -301,5 +301,7 @@
   "dossierYes": "Yes",
   "dossierNo": "No",
   "dossierPdfReview": "Extracted tables from {tablePages} of {pages} pages. Check every row against the PDF: other layouts may leave apartments or values unrecognized. Expected prices in ₪ and areas in m². Nothing is added before confirmation.",
-  "dossierPdfError": "Extraction failed or values need correction. Use a text PDF with a table and Number/Reference, Rooms, Area and Price columns, or the CSV template. Drawn plans and scans without text are not converted. Maximum: 5 MB and 50 pages."
+  "dossierPdfError": "Extraction failed or values need correction. Use a text PDF with a table and Number/Reference, Rooms, Area and Price columns, or the CSV template. Drawn plans and scans without text are not converted. Maximum: 5 MB and 50 pages.",
+  "dossierFileSaved": "File saved in the selected folder.",
+  "dossierDownloadStarted": "Download sent to the browser. Open its downloads (Ctrl+J) to find the file or show its folder. The location depends on browser settings."
 }
